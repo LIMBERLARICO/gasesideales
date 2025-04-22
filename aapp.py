@@ -1,6 +1,4 @@
 import streamlit as st
-
-
 st.image("imagen3.png")
 
 st.title("Calculadora General de Gases Ideales (PV/T = constante)")
@@ -75,3 +73,5 @@ if st.button("Calcular"):
         st.write(f"P₂ = {P2:.3f} atm" if P2 else "P₂ = ?")
         st.write(f"V₂ = {V2:.3f} L" if V2 else "V₂ = ?")
         st.write(f"T₂ = {T2:.3f} K" if T2 else "T₂ = ?")
+
+st.image("imagen3.png")
