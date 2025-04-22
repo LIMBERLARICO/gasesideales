@@ -1,7 +1,6 @@
 import streamlit as st
-from PIL import Image
 
-st.image("imagen1.png", caption="") #, use_column_width=False)
+st.image("imagen1.png")
 
 # Constante universal de los gases (L·atm/mol·K)
 R = 0.0821
@@ -44,3 +43,4 @@ elif opcion == "Número de moles (n)":
     if st.button("Calcular Número de moles"):
         n = (P * V) / (R * T)
         st.success(f"Número de moles = {n:.3f} mol")
+st.image("foto.png")
