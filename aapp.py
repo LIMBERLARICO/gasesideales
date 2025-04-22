@@ -1,58 +1,54 @@
 import streamlit as st
 
-R = 0.0821  # L·atm/mol·K
+st.title("Calculadora de Gases Ideales (sin cambio de moles)")
+st.markdown("Usamos la fórmula: **P·V / T = constante** (n constante)")
 
-st.title("Calculadora de Gases Ideales: Estado Inicial vs. Final")
-st.write("Basado en la ecuación general de los gases ideales: **PV = nRT**")
+# Selección de variable a calcular en la condición final
+opcion = st.selectbox("¿Qué variable final deseas calcular?", ["Presión (P)", "Volumen (V)", "Temperatura (T)"])
 
-# Selección de la variable a calcular en el estado final
-variable = st.selectbox("¿Qué variable deseas calcular en el estado final?", 
-                        ["Presión (P₂)", "Volumen (V₂)", "Temperatura (T₂)", "Número de moles (n₂)"])
+st.subheader("Condiciones Iniciales")
+P1 = st.number_input("Presión inicial (atm)", min_value=0.0001)
+V1 = st.number_input("Volumen inicial (L)", min_value=0.0001)
+T1 = st.number_input("Temperatura inicial (K)", min_value=0.0001)
 
-st.subheader("🔵 Condiciones Iniciales (Estado 1)")
-P1 = st.number_input("Presión P₁ (atm)", min_value=0.0001)
-V1 = st.number_input("Volumen V₁ (L)", min_value=0.0001)
-T1 = st.number_input("Temperatura T₁ (K)", min_value=0.0001)
-n1 = st.number_input("Número de moles n₁ (mol)", min_value=0.0001)
+st.subheader("Condiciones Finales")
 
-st.subheader("🟢 Condiciones Finales (Estado 2)")
-P2 = V2 = T2 = n2 = None
+if opcion == "Presión (P)":
+    V2 = st.number_input("Volumen final (L)", min_value=0.0001)
+    T2 = st.number_input("Temperatura final (K)", min_value=0.0001)
+    if st.button("Calcular Presión final"):
+        P2 = (P1 * V1 * T2) / (T1 * V2)
+        st.success(f"Presión final = {P2:.3f} atm")
 
-# Mostrar campos según lo que se quiere calcular
-if variable == "Presión (P₂)":
-    V2 = st.number_input("Volumen V₂ (L)", min_value=0.0001)
-    T2 = st.number_input("Temperatura T₂ (K)", min_value=0.0001)
-    n2 = st.number_input("Número de moles n₂ (mol)", value=n1, min_value=0.0001)
-    if st.button("Calcular Presión Final"):
-        P2 = (n2 * R * T2) / V2
-        st.success(f"Presión Final P₂ = {P2:.3f} atm")
+elif opcion == "Volumen (V)":
+    P2 = st.number_input("Presión final (atm)", min_value=0.0001)
+    T2 = st.number_input("Temperatura final (K)", min_value=0.0001)
+    if st.button("Calcular Volumen final"):
+        V2 = (P1 * V1 * T2) / (T1 * P2)
+        st.success(f"Volumen final = {V2:.3f} L")
 
-elif variable == "Volumen (V₂)":
-    P2 = st.number_input("Presión P₂ (atm)", min_value=0.0001)
-    T2 = st.number_input("Temperatura T₂ (K)", min_value=0.0001)
-    n2 = st.number_input("Número de moles n₂ (mol)", value=n1, min_value=0.0001)
-    if st.button("Calcular Volumen Final"):
-        V2 = (n2 * R * T2) / P2
-        st.success(f"Volumen Final V₂ = {V2:.3f} L")
+elif opcion == "Temperatura (T)":
+    P2 = st.number_input("Presión final (atm)", min_value=0.0001)
+    V2 = st.number_input("Volumen final (L)", min_value=0.0001)
+    if st.button("Calcular Temperatura final"):
+        T2 = (T1 * P2 * V2) / (P1 * V1)
+        st.success(f"Temperatura final = {T2:.3f} K")
 
-elif variable == "Temperatura (T₂)":
-    P2 = st.number_input("Presión P₂ (atm)", min_value=0.0001)
-    V2 = st.number_input("Volumen V₂ (L)", min_value=0.0001)
-    n2 = st.number_input("Número de moles n₂ (mol)", value=n1, min_value=0.0001)
-    if st.button("Calcular Temperatura Final"):
-        T2 = (P2 * V2) / (n2 * R)
-        st.success(f"Temperatura Final T₂ = {T2:.3f} K")
+# Mostrar resumen
+st.subheader("Resumen de Condiciones")
+col1, col2 = st.columns(2)
 
-elif variable == "Número de moles (n₂)":
-    P2 = st.number_input("Presión P₂ (atm)", min_value=0.0001)
-    V2 = st.number_input("Volumen V₂ (L)", min_value=0.0001)
-    T2 = st.number_input("Temperatura T₂ (K)", min_value=0.0001)
-    if st.button("Calcular Número de moles Final"):
-        n2 = (P2 * V2) / (R * T2)
-        st.success(f"Número de moles Final n₂ = {n2:.3f} mol")
+with col1:
+    st.markdown("### Inicial")
+    st.write(f"Presión: {P1} atm")
+    st.write(f"Volumen: {V1} L")
+    st.write(f"Temperatura: {T1} K")
 
-# Mostrar resumen final si todos los datos están listos
-if all(v is not None for v in [P1, V1, T1, n1]) and variable.startswith("Presión") and P2 is not None:
-    st.info(f"Comparación: P₁ = {P1} atm → P₂ = {P2:.3f} atm")
-
-# Puedes replicar este bloque para V₂, T₂, n₂ si deseas más mensajes comparativos
+with col2:
+    st.markdown("### Final")
+    if opcion != "Presión (P)":
+        st.write(f"Presión: {P2} atm")
+    if opcion != "Volumen (V)":
+        st.write(f"Volumen: {V2} L")
+    if opcion != "Temperatura (T)":
+        st.write(f"Temperatura: {T2} K")
