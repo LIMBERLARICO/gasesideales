@@ -1,5 +1,5 @@
 import streamlit as st
-st.image("imagen3.png")
+st.image("superrealist style.webp")
 
 st.title("Calculadora General de Gases Ideales (PV/T = constante)")
 st.markdown("Usa la relación:  \n**(P₁·V₁)/T₁ = (P₂·V₂)/T₂** (n constante)")
