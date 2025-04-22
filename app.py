@@ -1,5 +1,8 @@
 import streamlit as st
 
+image_url = "https://github.com/LIMBERLARICO/gasesideales/blob/main/imagen1.png"
+st.image(image_url, use_column_width=True)
+
 # Constante universal de los gases (L·atm/mol·K)
 R = 0.0821
 
