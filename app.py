@@ -1,7 +1,7 @@
 import streamlit as st
 from PIL import Image
 
-st.image("imagen1.png", caption="", use_column_width=False)
+st.image("imagen1.png", caption="") #, use_column_width=False)
 
 # Constante universal de los gases (L·atm/mol·K)
 R = 0.0821
