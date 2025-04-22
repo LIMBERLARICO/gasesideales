@@ -74,4 +74,4 @@ if st.button("Calcular"):
         st.write(f"V₂ = {V2:.3f} L" if V2 else "V₂ = ?")
         st.write(f"T₂ = {T2:.3f} K" if T2 else "T₂ = ?")
 
-st.image("imagen3.png")
+st.image("imagen2.png")
