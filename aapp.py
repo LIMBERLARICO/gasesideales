@@ -1,45 +1,74 @@
 import streamlit as st
 
-st.title("Calculadora de Gases Ideales (PV/T = constante)")
-st.markdown("Basado en la relación:  \n **(P₁·V₁)/T₁ = (P₂·V₂)/T₂**")
+st.title("Calculadora General de Gases Ideales (PV/T = constante)")
+st.markdown("Usa la relación:  \n**(P₁·V₁)/T₁ = (P₂·V₂)/T₂** (n constante)")
 
-# Elegir si se quiere calcular una variable de la condición inicial o final
-condicion = st.radio("¿Qué condición deseas calcular?", ["Inicial", "Final"])
+# Selección de la variable a calcular
+var_opciones = {
+    "Presión inicial (P₁)": "P1",
+    "Volumen inicial (V₁)": "V1",
+    "Temperatura inicial (T₁)": "T1",
+    "Presión final (P₂)": "P2",
+    "Volumen final (V₂)": "V2",
+    "Temperatura final (T₂)": "T2"
+}
+variable = st.selectbox("Selecciona la variable a calcular:", list(var_opciones.keys()))
+calc = var_opciones[variable]
 
-# Elegir qué variable calcular dentro de la condición elegida
-if condicion == "Inicial":
-    variable = st.selectbox("Selecciona la variable inicial a calcular", ["Presión (P₁)", "Volumen (V₁)", "Temperatura (T₁)"])
-else:
-    variable = st.selectbox("Selecciona la variable final a calcular", ["Presión (P₂)", "Volumen (V₂)", "Temperatura (T₂)"])
+# Campos para ingresar datos conocidos
+def campo_input(nombre, key, excluir):
+    if key != excluir:
+        return st.number_input(nombre, min_value=0.0001, key=key)
+    return None
 
-st.subheader("🔷 Ingreso de datos conocidos")
+st.subheader("🔷 Ingreso de valores conocidos")
+P1 = campo_input("Presión inicial P₁ (atm)", "P1", calc)
+V1 = campo_input("Volumen inicial V₁ (L)", "V1", calc)
+T1 = campo_input("Temperatura inicial T₁ (K)", "T1", calc)
+P2 = campo_input("Presión final P₂ (atm)", "P2", calc)
+V2 = campo_input("Volumen final V₂ (L)", "V2", calc)
+T2 = campo_input("Temperatura final T₂ (K)", "T2", calc)
 
-# Ingreso de datos según la variable seleccionada
-if condicion == "Inicial":
-    if variable == "Presión (P₁)":
-        V1 = st.number_input("Volumen inicial V₁ (L)", min_value=0.0001)
-        T1 = st.number_input("Temperatura inicial T₁ (K)", min_value=0.0001)
-        P2 = st.number_input("Presión final P₂ (atm)", min_value=0.0001)
-        V2 = st.number_input("Volumen final V₂ (L)", min_value=0.0001)
-        T2 = st.number_input("Temperatura final T₂ (K)", min_value=0.0001)
-        if st.button("Calcular P₁"):
-            P1 = (P2 * V2 * T1) / (V1 * T2)
-            st.success(f"Presión inicial P₁ = {P1:.3f} atm")
-            st.write(f"Condiciones finales: P₂={P2} atm, V₂={V2} L, T₂={T2} K")
-    elif variable == "Volumen (V₁)":
-        P1 = st.number_input("Presión inicial P₁ (atm)", min_value=0.0001)
-        T1 = st.number_input("Temperatura inicial T₁ (K)", min_value=0.0001)
-        P2 = st.number_input("Presión final P₂ (atm)", min_value=0.0001)
-        V2 = st.number_input("Volumen final V₂ (L)", min_value=0.0001)
-        T2 = st.number_input("Temperatura final T₂ (K)", min_value=0.0001)
-        if st.button("Calcular V₁"):
-            V1 = (P2 * V2 * T1) / (P1 * T2)
-            st.success(f"Volumen inicial V₁ = {V1:.3f} L")
-    elif variable == "Temperatura (T₁)":
-        P1 = st.number_input("Presión inicial P₁ (atm)", min_value=0.0001)
-        V1 = st.number_input("Volumen inicial V₁ (L)", min_value=0.0001)
-        P2 = st.number_input("Presión final P₂ (atm)", min_value=0.0001)
-        V2 = st.number_input("Volumen final V₂ (L)", min_value=0.0001)
-        T2 = st.number_input("Temperatura final T₂ (K)", min_value=0.0001)
-        if st.button("Calcular T₁"):
-            T1 = (P1 * V1 * T2) / (P
+# Botón de cálculo
+if st.button("Calcular"):
+    try:
+        if calc == "P1":
+            result = (P2 * V2 * T1) / (V1 * T2)
+            st.success(f"Presión inicial P₁ = {result:.3f} atm")
+            P1 = result
+        elif calc == "V1":
+            result = (P2 * V2 * T1) / (P1 * T2)
+            st.success(f"Volumen inicial V₁ = {result:.3f} L")
+            V1 = result
+        elif calc == "T1":
+            result = (P1 * V1 * T2) / (P2 * V2)
+            st.success(f"Temperatura inicial T₁ = {result:.3f} K")
+            T1 = result
+        elif calc == "P2":
+            result = (P1 * V1 * T2) / (V2 * T1)
+            st.success(f"Presión final P₂ = {result:.3f} atm")
+            P2 = result
+        elif calc == "V2":
+            result = (P1 * V1 * T2) / (P2 * T1)
+            st.success(f"Volumen final V₂ = {result:.3f} L")
+            V2 = result
+        elif calc == "T2":
+            result = (P2 * V2 * T1) / (P1 * V1)
+            st.success(f"Temperatura final T₂ = {result:.3f} K")
+            T2 = result
+    except:
+        st.error("Verifica que todos los datos sean correctos y no sean cero.")
+
+    # Mostrar condiciones completas
+    st.subheader("📋 Condiciones completas")
+    col1, col2 = st.columns(2)
+    with col1:
+        st.markdown("### Inicial")
+        st.write(f"P₁ = {P1:.3f} atm" if P1 else "P₁ = ?")
+        st.write(f"V₁ = {V1:.3f} L" if V1 else "V₁ = ?")
+        st.write(f"T₁ = {T1:.3f} K" if T1 else "T₁ = ?")
+    with col2:
+        st.markdown("### Final")
+        st.write(f"P₂ = {P2:.3f} atm" if P2 else "P₂ = ?")
+        st.write(f"V₂ = {V2:.3f} L" if V2 else "V₂ = ?")
+        st.write(f"T₂ = {T2:.3f} K" if T2 else "T₂ = ?")
