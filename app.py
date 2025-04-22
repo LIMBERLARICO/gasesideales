@@ -43,4 +43,4 @@ elif opcion == "Número de moles (n)":
     if st.button("Calcular Número de moles"):
         n = (P * V) / (R * T)
         st.success(f"Número de moles = {n:.3f} mol")
-st.image("foto.png")
+st.image("1964.webp")
