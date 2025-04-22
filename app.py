@@ -1,6 +1,6 @@
 import streamlit as st
 
-st.image("imagen1.png")
+st.image("imagen2.webp")
 
 # Constante universal de los gases (L·atm/mol·K)
 R = 0.0821
